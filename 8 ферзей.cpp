@@ -3,7 +3,6 @@ using namespace std;
 
 int board[8][8]; //доска
 
-//void print_board();  //вывожу доску с числовыми индексами
 void setQueen(int i, int j); //ставлю ферзя
 void resetQueen(int i, int j); //убираю ферзя
 bool tryQueen(int i); //выставляю ферзей
@@ -30,16 +29,6 @@ int main() {
 
     return 0;
 }
-
-/*void print_board() {
-    for (int i = 0; i < 8; i++) {
-        for (int j = 0; j < 8; j++) {
-            cout << board[i][j] << ' ';
-        }
-        cout << endl;
-    }
-    cout << endl;
-}*/
 
 void setQueen(int i, int j) { //ставлю одного ферзя
     int foo;
