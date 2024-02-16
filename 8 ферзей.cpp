@@ -1,32 +1,37 @@
 ﻿#include <iostream>
 using namespace std;
 
-int board[8][8];
+int board[8][8]; //доска
 
-void print_board();  
-void setQueen(int i, int j); 
-void resetQueen(int i, int j); 
-bool tryQueen(int i); 
-void print_board_Q(); 
+//void print_board();  //вывожу доску с числовыми индексами
+void setQueen(int i, int j); //ставлю ферзя
+void resetQueen(int i, int j); //убираю ферзя
+bool tryQueen(int i); //выставляю ферзей
+void print_board_Q(); //вывожу красивую доску
+
 int main() {
     setlocale(LC_ALL, "Russian");
 
-
-    for (int i = 0; i < 8; ++i) {
-        for (int j = 0; j < 8; ++j) {
-            board[i][j] = 0;
+    for (int i = 0; i < 8; ++i) { //прохожу по строкам
+        for (int j = 0; j < 8; ++j) { //прохожу по столбцам
+            board[i][j] = 0; //заполняю 0
         }
     }
-    print_board();
 
-    tryQueen(0);
-    print_board();
-    print_board_Q();
+    cout << "На доскe, размером 8 на 8 клеток, будет расставлено 8 ферзей " << endl;
+    cout << "Q - ферзь" << endl << "* - позиции, которые ферзь 'бьет'" << endl << endl;
+    print_board_Q(); //вывожу текущую доску
+
+    tryQueen(0); //выставляю ферзей, на чиная с верхней строки
+
+    cout << "На доске расставлено 8 ферзей: " << endl;
+    print_board_Q(); //вывожу доску в виде доски
+
 
     return 0;
 }
 
-void print_board() {
+/*void print_board() {
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
             cout << board[i][j] << ' ';
@@ -34,77 +39,88 @@ void print_board() {
         cout << endl;
     }
     cout << endl;
-}
+}*/
 
-void setQueen(int i, int j) {
+void setQueen(int i, int j) { //ставлю одного ферзя
     int foo;
     for (int x = 0; x < 8; ++x) {
-        ++board[x][j];
-        ++board[i][x];
+        ++board[x][j]; //отмечаю по вертикали те позиции, которые ферзь "бьет"
+        ++board[i][x]; //отмечаю по горизонтали те позиции, которые ферзь "бьет"
         foo = j - i + x;
         if (foo >= 0 && foo < 8) {
-            ++board[x][foo];
+            ++board[x][foo]; //отмечаю на левой диагонали позиции, которые ферзь "бьет"
         }
         foo = j + i - x;
         if (foo >= 0 && foo < 8) {
-            ++board[x][foo];
+            ++board[x][foo]; //отмечаю на правой диагонали позиции, которые ферзь "бьет"
         }
     }
-    board[i][j] = -1;
+    board[i][j] = -1; //отмечаю позицию, на которой ферзь стоит
+    //i - индекс строки
+    //i - индекс столбца
 }
 
-void resetQueen(int i, int j) {
+void resetQueen(int i, int j) { //убираю одного ферзя
     int foo;
     for (int x = 0; x < 8; x++) {
-        --board[x][j];
-        --board[i][x];
+        --board[x][j]; //убираю по вертикали те позиции, которые ферзь больше не "бьет"
+        --board[i][x]; //убираю по горизонтали те позиции, которые ферзь больше не "бьет"
         foo = j - i + x;
         if (foo >= 0 && foo < 8) {
-            --board[x][foo];
+            --board[x][foo]; //убираю на левой диагонали позиции, которые ферзь больше не "бьет"
         }
         foo = j + i - x;
         if (foo >= 0 && foo < 8) {
-            --board[x][foo];
+            --board[x][foo]; //убираюю на правой диагонали позиции, которые ферзь больше не "бьет"
         }
     }
-    board[i][j] = 0;
+    board[i][j] = 0; //убираю позицию, на которой ферзь стоял
+    //i - индекс строки
+    //i - индекс столбца
 }
 
-bool tryQueen(int i) {
+bool tryQueen(int i) { //выставляю всех ферзей
     bool result = false;
     for (int j = 0; j < 8; j++) {
-        if (board[i][j] == 0) {
-
-            setQueen(i, j);
-            cout << "Ферзь поставлен в строку: " << i + 1 << endl;
-            print_board_Q();
-            if (i == 7) {
+        if (board[i][j] == 0) { //если элемент == 0, то на эту позицию возможно поставить ферзя
+            setQueen(i, j); //ставлю ферзя на позицию
+            cout << "Ферзь поставлен в строку " << i + 1 << ", столбец " << j + 1 << endl;
+            cout << "Ферзей расставлено: " << i + 1 << endl;
+            print_board_Q(); //вывожу текущую доску
+            if (i == 7) { //если i == 7, то расставлены все ферзи
                 result = true;
             }
             else {
                 result = tryQueen(i + 1);
-                if (!result) resetQueen(i, j);
-
+                if (!result) {
+                    cout << "Нет такой клетки, в которую можно было бы поставить ферзя на строке " << i + 2 << ", с учетом совершенных ходов" << endl;
+                    cout << "Ферзь убран из строки " << i + 1 << ", столбца " << j + 1 << endl;
+                    resetQueen(i, j); //убираю ферзя с данной позиции
+                    print_board_Q(); //вывожу текущую доску
+                }
             }
         }
     }
     return result;
+    //i - индекс строки
 }
 
 void print_board_Q() {
+    cout << "---------------------------------" << endl;
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
+
             if (board[i][j] == -1) {
-                cout << "Q ";
+                cout << "| Q ";
             }
             else if (board[i][j] > 0) {
-                cout << "* ";
+                cout << "| * ";
             }
             else {
-                cout << ". ";
+                cout << "|   ";
             }
         }
-        cout << endl;
+        cout << "|" << endl << "---------------------------------" << endl;
     }
     cout << endl;
 }
